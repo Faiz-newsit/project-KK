@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 auto-detects sources from the git root. This project is not a
+ * git repo yet, so the source tree is declared explicitly to keep utility
+ * generation stable if the folder is ever moved or initialised as a repo.
+ */
+@source "../app";
+@source "../components";
+@source "../lib";
+
+@theme {
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-caveat), cursive;
+}
+
+/* Rubik carries headlines and prices; Nunito Sans carries reading copy. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg, #ffffff);
+  color: var(--ink, #1f1512);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prices and counters read as one column of numbers. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+/* Horizontal rails scroll without a visible track. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Keyboard focus stays visible everywhere; pointer focus does not. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

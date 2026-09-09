@@ -1,0 +1,81 @@
+import type { Theme } from './types'
+
+export const independence: Theme = {
+  id: 'independence-day',
+  label: 'Independence Day',
+  route: '/independence-day',
+  available: true,
+  isDark: false,
+  swatch: ['#FF9933', '#FFFFFF', '#138808'],
+
+  tokens: {
+    bg: '#FFFFFF',
+    bgAlt: '#FFF9F2',
+    surface: '#FFFFFF',
+    surfaceAlt: '#FFF4E8',
+    border: '#F2E4D4',
+    ink: '#1F1512',
+    inkMuted: '#7A6A63',
+    primary: '#D93A1F',
+    primaryHover: '#B62E15',
+    primaryInk: '#FFFFFF',
+    accent: '#138808',
+    accentInk: '#FFFFFF',
+    gold: '#FF9933',
+    announcementFrom: '#FBB040',
+    announcementTo: '#F59120',
+    announcementInk: '#3A2410',
+    headerBg: '#FFFFFF',
+    headerInk: '#1F1512',
+    navBg: '#FFFFFF',
+    navInk: '#4A3B34',
+    heroFrom: '#FFF6EC',
+    heroTo: '#F3FBF1',
+    promoFrom: '#FFF1DF',
+    promoTo: '#EEF9EA',
+    promoInk: '#1F1512',
+    ring: 'rgba(217, 58, 31, 0.35)',
+    shadow: 'rgba(84, 44, 20, 0.10)',
+  },
+
+  content: {
+    announcement: {
+      text: 'Freedom tastes better together! Get 15% OFF on all orders',
+      code: 'FREEDOM15',
+      tagline: 'Celebrating 79 years of freedom',
+    },
+    hero: {
+      titleLines: [
+        { text: 'Celebrate Freedom.', tone: 'primary' },
+        { text: 'Feast Fresh.', tone: 'accent', underline: true },
+      ],
+      subtitle: 'Premium fresh cuts for your Independence Day celebration.',
+      chips: [
+        { icon: 'fresh', label: 'Fresh & Hygienic' },
+        { icon: 'halal', label: 'Halal Certified' },
+        { icon: 'delivery', label: 'Fast Delivery' },
+      ],
+      ctaPrimary: 'Shop Now',
+      ctaSecondary: 'Explore Offers',
+      script: 'Proudly Indian, Always Fresh',
+      art: '/festive/hero-independence.jpg',
+    },
+    promo: {
+      eyebrow: 'Independence Day Special',
+      headline: 'Flat 15% off',
+      sub: 'On all fresh cuts',
+      cta: 'Shop Now',
+      script: 'Good Food, Free Spirit',
+      image: '/festive/promo-independence.png',
+    },
+    favourites: {
+      title: 'All Time Favourites',
+      subtitle: 'Most loved by our customers',
+    },
+    app: {
+      title: 'Get the Karikadai App',
+      subtitle: 'Order fresh halal meat, cut to order and delivered across Chennai.',
+      image: '/festive/app-independence.png',
+    },
+  },
+}
