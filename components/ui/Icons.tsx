@@ -15,6 +15,8 @@ import {
   Heart,
   Plus,
   Check,
+  X,
+  Minus,
   Leaf,
   SealCheck,
   Truck,
@@ -33,6 +35,8 @@ export const ArrowRight = PhArrowRight
 export const HeartIcon = Heart
 export const PlusIcon = Plus
 export const CheckIcon = Check
+export const XIcon = X
+export const MinusIcon = Minus
 
 export const featureIcons: Record<IconName, typeof Leaf> = {
   fresh: Leaf,

@@ -13,6 +13,7 @@ import { AppDownload } from './sections/AppDownload'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { SplashScreen } from './ui/SplashScreen'
 import { CartProvider } from './cart/CartProvider'
+import { CartDrawer } from './cart/CartDrawer'
 
 /**
  * The single homepage layout, shared by every festive route.
@@ -39,6 +40,7 @@ export function FestiveHome({ theme }: { theme: Theme }) {
 
         <Footer theme={theme} />
         <ThemeSwitcher current={theme.id} />
+        <CartDrawer />
       </CartProvider>
     </div>
   )
