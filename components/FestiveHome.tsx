@@ -12,6 +12,7 @@ import { AppDownload } from './sections/AppDownload'
 
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { SplashScreen } from './ui/SplashScreen'
+import { CartProvider } from './cart/CartProvider'
 
 /**
  * The single homepage layout, shared by every festive route.
@@ -23,20 +24,22 @@ import { SplashScreen } from './ui/SplashScreen'
 export function FestiveHome({ theme }: { theme: Theme }) {
   return (
     <div style={toCssVars(theme.tokens)} className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">
-      <SplashScreen themeId={theme.id} />
+      <CartProvider>
+        <SplashScreen themeId={theme.id} />
 
-      <SiteHeader theme={theme} />
+        <SiteHeader theme={theme} />
 
-      <main>
-        <Hero theme={theme} />
-        <CategoryRail />
-        <PromoBanner theme={theme} />
-        <ProductGrid theme={theme} />
-        <AppDownload theme={theme} />
-      </main>
+        <main>
+          <Hero theme={theme} />
+          <CategoryRail />
+          <PromoBanner theme={theme} />
+          <ProductGrid theme={theme} />
+          <AppDownload theme={theme} />
+        </main>
 
-      <Footer theme={theme} />
-      <ThemeSwitcher current={theme.id} />
+        <Footer theme={theme} />
+        <ThemeSwitcher current={theme.id} />
+      </CartProvider>
     </div>
   )
 }
