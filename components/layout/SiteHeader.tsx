@@ -2,7 +2,7 @@ import Image from 'next/image'
 import type { Theme } from '@/themes/types'
 import { navLinks } from '@/data/nav'
 import { categories } from '@/data/categories'
-import { cartCount, cartTotal, formatRupees } from '@/data/cart'
+import { CartButton } from '@/components/cart/CartButton'
 import { CategoryImage } from '@/components/ui/Media'
 import { BRAND_LOGO_ATTR } from '@/lib/brand'
 import { TricolourRule, IndiaFlagGlyph } from '@/components/ui/TricolourRibbon'
@@ -146,21 +146,7 @@ export function SiteHeader({ theme }: { theme: Theme }) {
 
             {/* Count and running total: standard on Indian grocery commerce and
                 a stronger nudge than a bare icon. */}
-            <button
-              type="button"
-              aria-label={`Cart, ${cartCount} items, ${formatRupees(cartTotal)}`}
-              className="flex h-11 items-center gap-2.5 rounded-full border border-[var(--border)] pl-2.5 pr-3.5 transition-colors duration-200 hover:border-[var(--primary)] hover:bg-[var(--surface-alt)] cursor-pointer"
-            >
-              <span className="relative grid place-items-center">
-                <CartIcon size={22} />
-                <span className="tnum absolute -right-1.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-[var(--primary)] px-1 text-[10px] font-bold leading-none text-[var(--primary-ink)]">
-                  {cartCount}
-                </span>
-              </span>
-              <span className="tnum hidden text-sm font-bold lg:block">
-                {formatRupees(cartTotal)}
-              </span>
-            </button>
+            <CartButton />
           </div>
         </div>
 
