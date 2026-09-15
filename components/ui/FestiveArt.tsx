@@ -6,7 +6,8 @@ import type { ThemeId } from '@/themes/types'
  * illustrations. These ribbons are pure gradient geometry, no scene drawing.
  */
 
-const RIBBONS: Record<ThemeId, string[]> = {
+/* Shared with the splash screen, so both draw the same three brand colours. */
+export const RIBBONS: Record<ThemeId, string[]> = {
   'independence-day': ['#FF9933', '#FFFFFF', '#138808'],
   diwali: ['#E8B44A', '#C77B3A', '#7B1B3F'],
   bakrid: ['#C9A227', '#F0E6C8', '#0F5132'],

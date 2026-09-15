@@ -4,6 +4,7 @@ import { navLinks } from '@/data/nav'
 import { categories } from '@/data/categories'
 import { cartCount, cartTotal, formatRupees } from '@/data/cart'
 import { CategoryImage } from '@/components/ui/Media'
+import { BRAND_LOGO_ATTR } from '@/lib/brand'
 import { TricolourRule, IndiaFlagGlyph } from '@/components/ui/TricolourRibbon'
 import {
   SearchIcon,
@@ -104,6 +105,7 @@ export function SiteHeader({ theme }: { theme: Theme }) {
                 width={592}
                 height={316}
                 priority
+                {...{ [BRAND_LOGO_ATTR]: '' }}
                 className="h-14 w-auto sm:h-[68px]"
               />
             </a>

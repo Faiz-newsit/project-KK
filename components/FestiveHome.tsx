@@ -23,7 +23,7 @@ import { SplashScreen } from './ui/SplashScreen'
 export function FestiveHome({ theme }: { theme: Theme }) {
   return (
     <div style={toCssVars(theme.tokens)} className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">
-      <SplashScreen />
+      <SplashScreen themeId={theme.id} />
 
       <SiteHeader theme={theme} />
 
