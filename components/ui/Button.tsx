@@ -27,18 +27,27 @@ export function Button({
   variant = 'primary',
   size = 'md',
   className = '',
+  onClick,
+  disabled = false,
+  type = 'button',
 }: {
   children: ReactNode
   variant?: Variant
   size?: Size
   className?: string
+  onClick?: () => void
+  disabled?: boolean
+  type?: 'button' | 'submit'
 }) {
   return (
     <button
-      type="button"
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
       className={[
         'inline-flex items-center justify-center gap-2 rounded-full font-semibold',
         'transition-all duration-200 ease-out active:scale-[0.98] cursor-pointer',
+        'disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100',
         sizes[size],
         variants[variant],
         className,
