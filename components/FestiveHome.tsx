@@ -11,6 +11,7 @@ import { ProductGrid } from './sections/ProductGrid'
 import { AppDownload } from './sections/AppDownload'
 
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { SplashScreen } from './ui/SplashScreen'
 
 /**
  * The single homepage layout, shared by every festive route.
@@ -22,6 +23,8 @@ import { ThemeSwitcher } from './ThemeSwitcher'
 export function FestiveHome({ theme }: { theme: Theme }) {
   return (
     <div style={toCssVars(theme.tokens)} className="min-h-dvh bg-[var(--bg)] text-[var(--ink)]">
+      <SplashScreen />
+
       <SiteHeader theme={theme} />
 
       <main>
