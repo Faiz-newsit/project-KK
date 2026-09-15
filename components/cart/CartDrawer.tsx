@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCart } from './CartProvider'
+import { useCheckout } from './CheckoutProvider'
+import { CheckoutForm } from './CheckoutForm'
 import { formatRupees } from '@/lib/format'
 import { products } from '@/data/products'
 import { Button } from '@/components/ui/Button'
@@ -18,6 +20,7 @@ const FOCUSABLE =
  */
 export function CartDrawer() {
   const { lines, total, isOpen, setQty, remove, closeCart } = useCart()
+  const { phase, startCheckout } = useCheckout()
   const panel = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
 
@@ -96,7 +99,11 @@ export function CartDrawer() {
           >
             <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
               <h2 id="cart-drawer-heading" className="text-base font-bold text-[var(--ink)]">
-                Your cart
+                {phase === 'details'
+                  ? 'Delivery details'
+                  : phase === 'paying'
+                    ? 'Placing order'
+                    : 'Your cart'}
               </h2>
               <button
                 type="button"
@@ -108,99 +115,119 @@ export function CartDrawer() {
               </button>
             </div>
 
-            {lines.length === 0 ? (
-              <div className="grid flex-1 place-items-center px-6 text-center">
-                <p className="text-sm text-[var(--ink-muted)]">
-                  Nothing here yet. Add a cut to get started.
-                </p>
+            {phase === 'paying' ? (
+              <div role="status" className="grid flex-1 place-items-center px-6 text-center">
+                <div>
+                  <span className="mx-auto mb-4 block h-8 w-8 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--primary)]" />
+                  <p className="text-sm font-semibold text-[var(--ink)]">Placing your order…</p>
+                  <p className="mt-1 text-xs text-[var(--ink-muted)]">
+                    Demo order, no payment is taken.
+                  </p>
+                </div>
               </div>
+            ) : phase === 'details' ? (
+              <CheckoutForm />
             ) : (
-              <ul className="flex-1 overflow-y-auto px-5 py-4">
-                {lines.map((line) => {
-                  const product = products.find((p) => p.id === line.productId)
-                  if (!product) return null
+              <>
+                {lines.length === 0 ? (
+                  <div className="grid flex-1 place-items-center px-6 text-center">
+                    <p className="text-sm text-[var(--ink-muted)]">
+                      Nothing here yet. Add a cut to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <ul className="flex-1 overflow-y-auto px-5 py-4">
+                    {lines.map((line) => {
+                      const product = products.find((p) => p.id === line.productId)
+                      if (!product) return null
 
-                  return (
-                    <li
-                      key={line.productId + line.weightLabel}
-                      className="flex gap-3 border-b border-[var(--border)] py-3 last:border-0"
-                    >
-                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-alt)]">
-                        <Image
-                          src={product.image}
-                          alt=""
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div className="flex flex-1 flex-col gap-1.5">
-                        <p className="text-[13px] font-semibold leading-snug text-[var(--ink)]">
-                          {product.name}
-                        </p>
-                        <p className="text-xs text-[var(--ink-muted)]">{line.weightLabel}</p>
-
-                        <div className="mt-auto flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              aria-label={'Decrease quantity of ' + product.name}
-                              onClick={() => setQty(line.productId, line.weightLabel, line.qty - 1)}
-                              className="grid h-8 w-8 place-items-center rounded-md border border-[var(--border)] text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
-                            >
-                              <MinusIcon className="h-3.5 w-3.5" />
-                            </button>
-                            <span className="tnum w-7 text-center text-sm font-semibold">
-                              {line.qty}
-                            </span>
-                            <button
-                              type="button"
-                              aria-label={'Increase quantity of ' + product.name}
-                              onClick={() => setQty(line.productId, line.weightLabel, line.qty + 1)}
-                              className="grid h-8 w-8 place-items-center rounded-md border border-[var(--border)] text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
-                            >
-                              <PlusIcon className="h-3.5 w-3.5" />
-                            </button>
+                      return (
+                        <li
+                          key={line.productId + line.weightLabel}
+                          className="flex gap-3 border-b border-[var(--border)] py-3 last:border-0"
+                        >
+                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-alt)]">
+                            <Image
+                              src={product.image}
+                              alt=""
+                              fill
+                              sizes="64px"
+                              className="object-cover"
+                            />
                           </div>
 
-                          <span className="tnum text-sm font-bold text-[var(--primary)]">
-                            {formatRupees(line.unitPrice * line.qty)}
-                          </span>
-                        </div>
-                      </div>
+                          <div className="flex flex-1 flex-col gap-1.5">
+                            <p className="text-[13px] font-semibold leading-snug text-[var(--ink)]">
+                              {product.name}
+                            </p>
+                            <p className="text-xs text-[var(--ink-muted)]">{line.weightLabel}</p>
 
-                      <button
-                        type="button"
-                        aria-label={'Remove ' + product.name + ' from cart'}
-                        onClick={() => remove(line.productId, line.weightLabel)}
-                        className="self-start text-xs text-[var(--ink-muted)] underline transition-colors hover:text-[var(--primary)] cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
+                            <div className="mt-auto flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1">
+                                <button
+                                  type="button"
+                                  aria-label={'Decrease quantity of ' + product.name}
+                                  onClick={() => setQty(line.productId, line.weightLabel, line.qty - 1)}
+                                  className="grid h-8 w-8 place-items-center rounded-md border border-[var(--border)] text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
+                                >
+                                  <MinusIcon className="h-3.5 w-3.5" />
+                                </button>
+                                <span className="tnum w-7 text-center text-sm font-semibold">
+                                  {line.qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  aria-label={'Increase quantity of ' + product.name}
+                                  onClick={() => setQty(line.productId, line.weightLabel, line.qty + 1)}
+                                  className="grid h-8 w-8 place-items-center rounded-md border border-[var(--border)] text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
+                                >
+                                  <PlusIcon className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
 
-            {/* Removals are announced; additions are announced by the card. */}
-            <span aria-live="polite" className="sr-only">
-              {lines.length === 0 ? 'Cart is empty' : `${lines.length} lines in cart`}
-            </span>
+                              <span className="tnum text-sm font-bold text-[var(--primary)]">
+                                {formatRupees(line.unitPrice * line.qty)}
+                              </span>
+                            </div>
+                          </div>
 
-            <div className="border-t border-[var(--border)] px-5 py-4">
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-sm text-[var(--ink-muted)]">Total</span>
-                <span className="tnum text-lg font-bold text-[var(--ink)]">
-                  {formatRupees(total)}
+                          <button
+                            type="button"
+                            aria-label={'Remove ' + product.name + ' from cart'}
+                            onClick={() => remove(line.productId, line.weightLabel)}
+                            className="self-start text-xs text-[var(--ink-muted)] underline transition-colors hover:text-[var(--primary)] cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+
+                {/* Removals are announced; additions are announced by the card. */}
+                <span aria-live="polite" className="sr-only">
+                  {lines.length === 0 ? 'Cart is empty' : `${lines.length} lines in cart`}
                 </span>
-              </div>
-              {/* Deliberate endpoint: there is no backend to submit an order to. */}
-              <Button className="w-full" size="lg">
-                Checkout
-              </Button>
-            </div>
+
+                <div className="border-t border-[var(--border)] px-5 py-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-sm text-[var(--ink-muted)]">Total</span>
+                    <span className="tnum text-lg font-bold text-[var(--ink)]">
+                      {formatRupees(total)}
+                    </span>
+                  </div>
+                  <Button
+                    className="w-full"
+                    size="lg"
+                    onClick={startCheckout}
+                    disabled={lines.length === 0}
+                  >
+                    Checkout
+                  </Button>
+                </div>
+              </>
+            )}
           </motion.div>
         </>
       )}
