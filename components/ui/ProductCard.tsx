@@ -1,9 +1,12 @@
 import { discountPercent, type Product } from '@/data/products'
 import { ProductImage } from './Media'
-import { HeartIcon, PlusIcon, ChevronDown } from './Icons'
+import { ChevronDown } from './Icons'
+import { WishlistButton } from './WishlistButton'
+import { AddToCartButton } from './AddToCartButton'
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
-  const off = discountPercent(product)
+  const weight = product.weights[0]
+  const off = discountPercent(weight)
 
   return (
     <article
@@ -19,13 +22,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </span>
         )}
 
-        <button
-          type="button"
-          aria-label={'Save ' + product.name + ' to wishlist'}
-          className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-[var(--ink-muted)] backdrop-blur transition-colors duration-200 hover:text-[var(--primary)] cursor-pointer"
-        >
-          <HeartIcon className="h-4 w-4" />
-        </button>
+        <WishlistButton productName={product.name} />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
@@ -38,13 +35,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
 
         <div className="relative mt-auto w-fit">
           <select
-            defaultValue={product.weights[0]}
+            defaultValue={weight.label}
             aria-label={'Weight for ' + product.name}
             className="appearance-none rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] py-1.5 pl-3 pr-8 text-xs font-medium text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
           >
             {product.weights.map((w) => (
-              <option key={w} value={w}>
-                {w}
+              <option key={w.label} value={w.label}>
+                {w.label}
               </option>
             ))}
           </select>
@@ -53,21 +50,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
 
         <div className="flex items-center justify-between gap-3">
           <div className="tnum flex items-baseline gap-1.5">
-            {product.mrp && (
-              <span className="text-xs text-[var(--ink-muted)] line-through">
-                ₹{product.mrp}
-              </span>
+            {weight.mrp && (
+              <span className="text-xs text-[var(--ink-muted)] line-through">₹{weight.mrp}</span>
             )}
-            <span className="text-lg font-bold text-[var(--primary)]">₹{product.price}</span>
+            <span className="text-lg font-bold text-[var(--primary)]">₹{weight.price}</span>
           </div>
 
-          <button
-            type="button"
-            aria-label={'Add ' + product.name + ' to cart'}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[var(--primary)] text-[var(--primary)] transition-all duration-200 hover:bg-[var(--primary)] hover:text-[var(--primary-ink)] active:scale-95 cursor-pointer"
-          >
-            <PlusIcon className="h-4 w-4" />
-          </button>
+          <AddToCartButton productName={product.name} />
         </div>
       </div>
     </article>
