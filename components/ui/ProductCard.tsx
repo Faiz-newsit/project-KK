@@ -1,12 +1,36 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { discountPercent, type Product } from '@/data/products'
+import { useCart } from '@/components/cart/CartProvider'
 import { ProductImage } from './Media'
-import { ChevronDown } from './Icons'
+import { ChevronDown, CheckIcon, PlusIcon } from './Icons'
 import { WishlistButton } from './WishlistButton'
-import { AddToCartButton } from './AddToCartButton'
+
+/** How long the tick stays up before the button offers itself again. */
+const CONFIRM_MS = 1300
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
-  const weight = product.weights[0]
+  const [weightLabel, setWeightLabel] = useState(product.weights[0].label)
+  const [added, setAdded] = useState(false)
+  const timer = useRef<number | undefined>(undefined)
+  const reduce = useReducedMotion()
+  const { add } = useCart()
+
+  const weight = product.weights.find((w) => w.label === weightLabel) ?? product.weights[0]
   const off = discountPercent(weight)
+
+  /* A pending timer outliving the card would set state on an unmounted tree. */
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const onAdd = () => {
+    /* Ignore repeat taps while confirming, so timers never stack. */
+    if (added) return
+    add({ productId: product.id, weightLabel: weight.label, unitPrice: weight.price })
+    setAdded(true)
+    timer.current = window.setTimeout(() => setAdded(false), CONFIRM_MS)
+  }
 
   return (
     <article
@@ -35,7 +59,8 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
 
         <div className="relative mt-auto w-fit">
           <select
-            defaultValue={weight.label}
+            value={weightLabel}
+            onChange={(e) => setWeightLabel(e.target.value)}
             aria-label={'Weight for ' + product.name}
             className="appearance-none rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] py-1.5 pl-3 pr-8 text-xs font-medium text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
           >
@@ -56,8 +81,44 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             <span className="text-lg font-bold text-[var(--primary)]">₹{weight.price}</span>
           </div>
 
-          <AddToCartButton productName={product.name} />
+          <motion.button
+            type="button"
+            onClick={onAdd}
+            aria-label={'Add ' + product.name + ', ' + weight.label + ', to cart'}
+            whileTap={reduce ? undefined : { scale: 0.9 }}
+            animate={reduce ? undefined : { scale: added ? [1, 1.18, 1] : 1 }}
+            transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+            className={[
+              'relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-lg border',
+              'transition-colors duration-200 cursor-pointer',
+              added
+                ? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--primary-ink)]'
+                : 'border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--primary-ink)]',
+            ].join(' ')}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={added ? 'check' : 'plus'}
+                className="grid place-items-center"
+                initial={reduce ? false : { opacity: 0, scale: 0.5, rotate: -25 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.5, rotate: 25 }}
+                transition={{ duration: reduce ? 0 : 0.18, ease: 'easeOut' }}
+              >
+                {added ? (
+                  <CheckIcon className="h-4 w-4" weight="bold" />
+                ) : (
+                  <PlusIcon className="h-4 w-4" />
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
         </div>
+
+        {/* The tick is visual; this is the same confirmation for screen readers. */}
+        <span aria-live="polite" className="sr-only">
+          {added ? product.name + ', ' + weight.label + ', added to cart' : ''}
+        </span>
       </div>
     </article>
   )
