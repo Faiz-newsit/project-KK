@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-type Variant = 'primary' | 'outline' | 'accent' | 'glass'
+type Variant = 'primary' | 'outline' | 'accent' | 'elegant'
 type Size = 'sm' | 'md' | 'lg'
 
 const sizes: Record<Size, string> = {
@@ -16,12 +16,9 @@ const variants: Record<Variant, string> = {
     'bg-[var(--accent)] text-[var(--accent-ink)] hover:brightness-110 shadow-[0_6px_18px_var(--shadow)]',
   outline:
     'border border-[var(--primary)] text-[var(--primary)] bg-transparent hover:bg-[var(--primary)] hover:text-[var(--primary-ink)]',
-  /* Sits over photography or an animated backdrop: frosted so what is behind
-     reads through, ringed so the edge stays legible against light, dark and
-     busy areas alike. The frosting is a theme token, not a fixed white, so a
-     night palette gets a dark pane instead of a milky one. */
-  glass:
-    'bg-[var(--glass)] text-[var(--primary)] backdrop-blur-md ring-1 ring-[var(--glass-ring)] shadow-[0_4px_16px_var(--shadow)] hover:bg-[var(--surface)] hover:ring-[var(--primary)]',
+  /* Quiet dark pill for the offer CTA standing beside Shop Now. Everything it
+     needs is in `.btn-elegant`, where the hover sheen's pseudo-element lives. */
+  elegant: 'btn-elegant',
 }
 
 export function Button({

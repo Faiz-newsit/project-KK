@@ -256,3 +256,60 @@ body {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * Elegant secondary CTA
+ *
+ * Shop Now is a saturated gradient, so the offer button beside it has to hold
+ * its own without competing: a dark pill with a quiet border that lights up,
+ * and a sheen that blooms out of the middle on hover.
+ *
+ * The sheen is a single pseudo-element scaled 0 -> 4. That is compositor-only
+ * work and needs no extra markup. Every colour is a token, so each festival
+ * takes its warmth from --gold and its lit edge from --primary rather than
+ * carrying a fixed grey.
+ * --------------------------------------------------------------------------- */
+.btn-elegant {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--elegant-border);
+  background: var(--elegant-bg);
+  color: var(--elegant-ink);
+  font-weight: 700;
+  /* Inert where --elegant-bg is opaque; on the night palette it keeps the label
+     off the stars. */
+  backdrop-filter: blur(6px);
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.2s ease;
+}
+
+.btn-elegant::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--gold) 30%, transparent) 0%,
+    transparent 70%
+  );
+  transform: scale(0);
+  transition: transform 0.5s ease;
+}
+
+.btn-elegant:hover {
+  background: var(--elegant-bg-hover);
+  border-color: var(--primary);
+}
+
+.btn-elegant:hover::after {
+  transform: scale(4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-elegant,
+  .btn-elegant::after {
+    transition: none;
+  }
+}

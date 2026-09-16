@@ -50,6 +50,10 @@ export const diwali: Theme = {
     glassRing: 'rgba(232, 180, 74, 0.32)',
     scriptInk: '#F5D896',
     scriptHalo: 'rgba(0, 0, 0, 0.55)',
+    elegantBg: 'rgba(20, 7, 26, 0.72)',
+    elegantBgHover: 'rgba(48, 17, 58, 0.86)',
+    elegantBorder: 'rgba(232, 180, 74, 0.45)',
+    elegantInk: '#FDF6E9',
   },
 
   content: {

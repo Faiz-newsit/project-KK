@@ -41,6 +41,10 @@ export const bakrid: Theme = {
     glassRing: 'rgba(255, 255, 255, 0.70)',
     scriptInk: '#16261D',
     scriptHalo: 'rgba(255, 253, 246, 0.85)',
+    elegantBg: '#12251B',
+    elegantBgHover: '#1B3327',
+    elegantBorder: '#24402F',
+    elegantInk: '#F5F1E6',
   },
 
   content: {

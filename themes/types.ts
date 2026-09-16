@@ -41,6 +41,14 @@ export interface ThemeTokens {
   /** Handwritten tag colour, and the halo that keeps it legible over art. */
   scriptInk: string
   scriptHalo: string
+  /**
+   * The dark secondary CTA. Its lit hover edge is `primary` and its sheen is
+   * `gold`, so only the resting pill needs stating here.
+   */
+  elegantBg: string
+  elegantBgHover: string
+  elegantBorder: string
+  elegantInk: string
 }
 
 export interface HeroTitleLine {

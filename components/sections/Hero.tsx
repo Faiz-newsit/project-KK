@@ -151,7 +151,7 @@ export function Hero({ theme }: { theme: Theme }) {
             <Reveal delay={0.24}>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <ShopNowButton label={ctaPrimary} />
-                <Button variant="glass" size="lg">
+                <Button variant="elegant" size="lg">
                   {ctaSecondary}
                 </Button>
               </div>

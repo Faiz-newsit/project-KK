@@ -40,6 +40,10 @@ export const independence: Theme = {
     glassRing: 'rgba(255, 255, 255, 0.70)',
     scriptInk: '#3A2410',
     scriptHalo: 'rgba(255, 255, 255, 0.85)',
+    elegantBg: '#1A1A1A',
+    elegantBgHover: '#292929',
+    elegantBorder: '#2C2C2C',
+    elegantInk: '#FFFFFF',
   },
 
   content: {
