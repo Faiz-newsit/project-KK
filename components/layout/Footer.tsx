@@ -49,7 +49,7 @@ function FooterLink({ children }: { children: React.ReactNode }) {
 
 export function Footer({ theme }: { theme: Theme }) {
   return (
-    <footer className="bg-[var(--bg-alt)]" aria-label="Site footer">
+    <footer className="bg-[var(--bg-alt)] backdrop-blur-md" aria-label="Site footer">
       {/* Bookends the header rule, so the page opens and closes on the same mark. */}
       <TricolourRule themeId={theme.id} />
 

@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'motion/react'
 import { SplashRibbons } from './SplashRibbons'
+import { MidnightSky } from './MidnightSky'
 import { BRAND_LOGO_ATTR } from '@/lib/brand'
-import type { ThemeId } from '@/themes/types'
+import type { Theme, ThemeId } from '@/themes/types'
 
 /**
  * Splash timing, gathered here so the sequence is easy to retune -- set HOLD_MS
@@ -56,8 +57,18 @@ const sleep = (ms: number) => new Promise((r) => window.setTimeout(r, ms))
  *
  * Colours come from the theme custom properties on the FestiveHome wrapper,
  * which is why this has to live inside that wrapper, not in the root layout.
+ *
+ * A theme with an animated backdrop shows that backdrop here too, rather than
+ * the ribbons -- so the splash lifts to reveal the same sky it was drawn on
+ * instead of cutting from one scene to another.
  */
-export function SplashScreen({ themeId }: { themeId: ThemeId }) {
+export function SplashScreen({
+  themeId,
+  backdrop,
+}: {
+  themeId: ThemeId
+  backdrop?: Theme['backdrop']
+}) {
   const [visible, setVisible] = useState(true)
   const logoRef = useRef<HTMLDivElement>(null)
   const logo = useAnimationControls()
@@ -130,7 +141,11 @@ export function SplashScreen({ themeId }: { themeId: ThemeId }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: EASE_OUT }}
         >
-          <SplashRibbons themeId={themeId} reduce={reduce} />
+          {backdrop === 'midnight-sky' ? (
+            <MidnightSky className="absolute inset-0" />
+          ) : (
+            <SplashRibbons themeId={themeId} reduce={reduce} />
+          )}
 
           {/* Warm glow, so a white logo on the white Independence palette still sits on something. */}
           <div

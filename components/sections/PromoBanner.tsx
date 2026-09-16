@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import type { Theme } from '@/themes/types'
-import { RibbonSweep } from '@/components/ui/FestiveArt'
+import { RibbonSweep, GlowWash, LightString } from '@/components/ui/FestiveArt'
 import { Reveal } from '@/components/ui/Reveal'
 import { ShopNowButton } from '@/components/ui/ShopNowButton'
 
@@ -68,15 +68,29 @@ export function PromoBanner({ theme }: { theme: Theme }) {
         }}
         aria-label={eyebrow}
       >
-        <RibbonSweep
-          themeId={theme.id}
-          className="pointer-events-none absolute -left-10 -top-6 -z-10 h-32 w-[30rem] opacity-70"
-        />
-        <RibbonSweep
-          themeId={theme.id}
-          flip
-          className="pointer-events-none absolute -bottom-8 -right-10 -z-10 h-28 w-[26rem] opacity-55"
-        />
+        {/* Same rule as the hero: ribbons on a flat page, lamplight over the sky. */}
+        {theme.backdrop ? (
+          <>
+            <GlowWash className="absolute -left-20 -top-24 -z-10 h-64 w-64 opacity-30" />
+            <GlowWash
+              tone="accent"
+              className="absolute -bottom-24 -right-16 -z-10 h-64 w-64 opacity-25"
+            />
+            <LightString className="absolute inset-x-0 top-0 -z-10 opacity-90" />
+          </>
+        ) : (
+          <>
+            <RibbonSweep
+              themeId={theme.id}
+              className="pointer-events-none absolute -left-10 -top-6 -z-10 h-32 w-[30rem] opacity-70"
+            />
+            <RibbonSweep
+              themeId={theme.id}
+              flip
+              className="pointer-events-none absolute -bottom-8 -right-10 -z-10 h-28 w-[26rem] opacity-55"
+            />
+          </>
+        )}
 
         <div className="flex flex-col items-center gap-4 px-6 py-8 text-center sm:px-12 md:flex-row md:justify-between md:text-left">
           <div>

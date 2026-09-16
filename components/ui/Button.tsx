@@ -16,10 +16,12 @@ const variants: Record<Variant, string> = {
     'bg-[var(--accent)] text-[var(--accent-ink)] hover:brightness-110 shadow-[0_6px_18px_var(--shadow)]',
   outline:
     'border border-[var(--primary)] text-[var(--primary)] bg-transparent hover:bg-[var(--primary)] hover:text-[var(--primary-ink)]',
-  /* Sits over photography: frosted so the art reads through, ringed so the
-     edge stays legible against both light and busy areas. */
+  /* Sits over photography or an animated backdrop: frosted so what is behind
+     reads through, ringed so the edge stays legible against light, dark and
+     busy areas alike. The frosting is a theme token, not a fixed white, so a
+     night palette gets a dark pane instead of a milky one. */
   glass:
-    'bg-white/60 text-[var(--primary)] backdrop-blur-md ring-1 ring-[var(--primary)]/25 shadow-[0_4px_16px_rgba(90,50,25,0.14)] hover:bg-white/85 hover:ring-[var(--primary)]/45',
+    'bg-[var(--glass)] text-[var(--primary)] backdrop-blur-md ring-1 ring-[var(--glass-ring)] shadow-[0_4px_16px_var(--shadow)] hover:bg-[var(--surface)] hover:ring-[var(--primary)]',
 }
 
 export function Button({

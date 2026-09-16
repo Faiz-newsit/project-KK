@@ -36,6 +36,10 @@ export const independence: Theme = {
     promoInk: '#1F1512',
     ring: 'rgba(217, 58, 31, 0.35)',
     shadow: 'rgba(84, 44, 20, 0.10)',
+    glass: 'rgba(255, 255, 255, 0.68)',
+    glassRing: 'rgba(255, 255, 255, 0.70)',
+    scriptInk: '#3A2410',
+    scriptHalo: 'rgba(255, 255, 255, 0.85)',
   },
 
   content: {

@@ -34,7 +34,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
 
   return (
     <article
-      className="rise group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_var(--shadow)]"
+      className="rise group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_var(--shadow)]"
       style={{ animationDelay: index * 60 + 'ms' }}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--surface-alt)]">

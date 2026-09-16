@@ -43,7 +43,7 @@ export function ThemeSwitcher({ current }: { current: ThemeId }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-50 flex h-11 items-center gap-2 rounded-full bg-[var(--surface)] pl-3 pr-4 text-[13px] font-semibold text-[var(--ink)] shadow-[0_10px_30px_var(--shadow)] ring-1 ring-[var(--border)] transition-transform duration-200 hover:-translate-y-0.5 sm:bottom-6 sm:right-6 cursor-pointer"
+        className="fixed bottom-4 right-4 z-50 flex h-11 items-center gap-2 rounded-full bg-[var(--surface)] backdrop-blur-2xl pl-3 pr-4 text-[13px] font-semibold text-[var(--ink)] shadow-[0_10px_30px_var(--shadow)] ring-1 ring-[var(--border)] transition-transform duration-200 hover:-translate-y-0.5 sm:bottom-6 sm:right-6 cursor-pointer"
       >
         <Sparkle size={17} weight="fill" className="text-[var(--primary)]" />
         Festive themes
@@ -53,7 +53,7 @@ export function ThemeSwitcher({ current }: { current: ThemeId }) {
 
   return (
     <aside
-      className="fixed bottom-4 right-4 z-50 w-[248px] rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5 shadow-[0_16px_40px_var(--shadow)] sm:bottom-6 sm:right-6"
+      className="fixed bottom-4 right-4 z-50 w-[248px] rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5 backdrop-blur-2xl shadow-[0_16px_40px_var(--shadow)] sm:bottom-6 sm:right-6"
       aria-label="Festive theme picker"
     >
       <div className="mb-3 flex items-center justify-between gap-2">

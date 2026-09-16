@@ -91,7 +91,7 @@ export function CartDrawer() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-drawer-heading"
-            className="fixed right-0 top-0 z-[95] flex h-dvh w-full max-w-[420px] flex-col bg-[var(--surface)] shadow-[0_0_60px_var(--shadow)]"
+            className="fixed right-0 top-0 z-[95] flex h-dvh w-full max-w-[420px] flex-col bg-[var(--surface)] shadow-[0_0_60px_var(--shadow)] backdrop-blur-2xl"
             initial={reduce ? { opacity: 0 } : { x: '100%' }}
             animate={reduce ? { opacity: 1 } : { x: 0 }}
             exit={reduce ? { opacity: 0 } : { x: '100%' }}

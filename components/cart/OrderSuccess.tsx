@@ -80,7 +80,7 @@ export function OrderSuccess({ themeId }: { themeId: ThemeId }) {
                 Demo order — no payment was taken
               </p>
 
-              <dl className="mt-7 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-left">
+              <dl className="mt-7 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-left backdrop-blur-2xl">
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-xs text-[var(--ink-muted)]">Order</dt>
                   <dd className="tnum text-sm font-bold text-[var(--ink)]">{order.id}</dd>

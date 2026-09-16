@@ -17,7 +17,7 @@ export function CategoryRail() {
                 className="rise group flex w-full flex-col items-center gap-2.5 cursor-pointer"
                 style={{ animationDelay: i * 50 + 'ms' }}
               >
-                <span className="relative block aspect-square w-full overflow-hidden rounded-full border-2 border-[var(--border)] bg-[var(--surface)] transition-all duration-300 group-hover:-translate-y-1 group-hover:border-[var(--primary)] group-hover:shadow-[0_10px_24px_var(--shadow)]">
+                <span className="relative block aspect-square w-full overflow-hidden rounded-full border-2 border-[var(--border)] bg-[var(--surface)] backdrop-blur-md transition-all duration-300 group-hover:-translate-y-1 group-hover:border-[var(--primary)] group-hover:shadow-[0_10px_24px_var(--shadow)]">
                   <CategoryImage category={category} />
                 </span>
                 <span className="text-center text-[13px] font-medium text-[var(--ink)] transition-colors group-hover:text-[var(--primary)]">

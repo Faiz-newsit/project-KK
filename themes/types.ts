@@ -35,6 +35,12 @@ export interface ThemeTokens {
   promoInk: string
   ring: string
   shadow: string
+  /** Frosted panel behind copy that sits over artwork or a backdrop. */
+  glass: string
+  glassRing: string
+  /** Handwritten tag colour, and the halo that keeps it legible over art. */
+  scriptInk: string
+  scriptHalo: string
 }
 
 export interface HeroTitleLine {
@@ -89,6 +95,11 @@ export interface Theme {
   available: boolean
   /** Diwali inverts card surfaces and text weight. */
   isDark: boolean
+  /**
+   * Animated backdrop painted behind the whole page, with the sections left
+   * translucent so it reads through them. Themes without one are opaque.
+   */
+  backdrop?: 'midnight-sky'
   /** Three stops used to draw the switcher thumbnail, no image needed. */
   swatch: [string, string, string]
   tokens: ThemeTokens

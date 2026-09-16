@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import type { Theme, HeroTitleLine } from '@/themes/types'
 import { Button } from '@/components/ui/Button'
-import { RibbonSweep } from '@/components/ui/FestiveArt'
-import { BrushUnderline, IndiaFlagGlyph } from '@/components/ui/TricolourRibbon'
+import { RibbonSweep, GlowWash, LightString } from '@/components/ui/FestiveArt'
+import { BrushUnderline } from '@/components/ui/TricolourRibbon'
+import { FestiveGlyph } from '@/components/ui/FestiveGlyph'
 import { Reveal } from '@/components/ui/Reveal'
 import { ShopNowButton } from '@/components/ui/ShopNowButton'
 import { featureIcons, ChevronLeft, ChevronRight } from '@/components/ui/Icons'
@@ -28,8 +29,13 @@ function TitleLine({ line }: { line: HeroTitleLine }) {
 /**
  * Festive hero. Where a theme supplies artwork the panel is that image, with the
  * copy set over its open left side; otherwise it falls back to a gradient with
- * tricolour ribbons. The artwork already carries the product, so no separate
+ * painted decoration. The artwork already carries the product, so no separate
  * product card is drawn on top of it.
+ *
+ * Which decoration depends on what the panel sits on. Flat themes get the
+ * brand ribbon sweeps; a theme running over the midnight sky gets a lamp
+ * garland and two warm glows instead, because ribbons read as paint on a page
+ * while a night sky wants light falling into it.
  *
  * The panel is capped to the same 1320px column as every other section rather
  * than bleeding full width, so the artwork keeps its proportions on very wide
@@ -65,6 +71,15 @@ export function Hero({ theme }: { theme: Theme }) {
               className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(255,252,247,0.94)_0%,rgba(255,252,247,0.80)_32%,rgba(255,252,247,0.30)_54%,transparent_72%)]"
             />
           </>
+        ) : theme.backdrop ? (
+          <>
+            <GlowWash className="absolute -left-24 -top-28 -z-10 h-80 w-80 opacity-30" />
+            <GlowWash
+              tone="accent"
+              className="absolute -bottom-32 right-[-6rem] -z-10 h-80 w-80 opacity-25"
+            />
+            <LightString className="absolute inset-x-0 top-0 -z-10" />
+          </>
         ) : (
           <>
             <RibbonSweep
@@ -85,8 +100,11 @@ export function Hero({ theme }: { theme: Theme }) {
                 the credibility-first pattern wants the reason to buy visible
                 before any scrolling. */}
             <Reveal>
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/70 py-1.5 pl-2 pr-3.5 text-[13px] font-semibold text-[var(--ink)] ring-1 ring-white/70 backdrop-blur-md">
-                <IndiaFlagGlyph className="h-[15px] w-[21px] shrink-0 rounded-[2px]" />
+              <p className="inline-flex items-center gap-2 rounded-full bg-[var(--glass)] py-1.5 pl-2 pr-3.5 text-[13px] font-semibold text-[var(--ink)] ring-1 ring-[var(--glass-ring)] backdrop-blur-md">
+                <FestiveGlyph
+                  themeId={theme.id}
+                  className="h-[15px] w-[21px] shrink-0 rounded-[2px] text-[var(--primary)]"
+                />
                 <span className="capitalize">{offer}</span>
                 <span aria-hidden="true" className="text-[var(--ink-muted)]">
                   ·
@@ -118,7 +136,7 @@ export function Hero({ theme }: { theme: Theme }) {
                   return (
                     <li
                       key={chip.label}
-                      className="flex items-center gap-2 rounded-full bg-white/55 py-1.5 pl-2 pr-3.5 text-[13px] font-semibold text-[var(--ink)] ring-1 ring-white/60 backdrop-blur-md"
+                      className="flex items-center gap-2 rounded-full bg-[var(--glass)] py-1.5 pl-2 pr-3.5 text-[13px] font-semibold text-[var(--ink)] ring-1 ring-[var(--glass-ring)] backdrop-blur-md"
                     >
                       <span className="grid h-7 w-7 place-items-center rounded-full bg-[var(--accent)]/12 text-[var(--accent)]">
                         <Icon size={16} weight="bold" />
@@ -143,7 +161,10 @@ export function Hero({ theme }: { theme: Theme }) {
 
         {/* Handwritten tag, beside the product in the artwork. Raised clear of the
             fixed festive switcher, which sits in the same corner. */}
-        <p className="pointer-events-none absolute bottom-24 right-[6%] hidden max-w-[11rem] rotate-[-6deg] text-right font-script text-[clamp(1.3rem,1.8vw,1.75rem)] leading-tight text-[#3A2410] drop-shadow-[0_1px_3px_rgba(255,255,255,0.85)] xl:block">
+        <p
+          className="pointer-events-none absolute bottom-24 right-[6%] hidden max-w-[11rem] rotate-[-6deg] text-right font-script text-[clamp(1.3rem,1.8vw,1.75rem)] leading-tight text-[var(--script-ink)] xl:block"
+          style={{ filter: 'drop-shadow(0 1px 3px var(--script-halo))' }}
+        >
           {script}
         </p>
 
@@ -158,8 +179,8 @@ export function Hero({ theme }: { theme: Theme }) {
             aria-label={label}
             className={[
               'absolute top-1/2 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full',
-              'bg-white/70 text-[var(--ink)] ring-1 ring-white/70 backdrop-blur-md',
-              'transition-all duration-200 hover:bg-white hover:text-[var(--primary)]',
+              'bg-[var(--glass)] text-[var(--ink)] ring-1 ring-[var(--glass-ring)] backdrop-blur-md',
+              'transition-all duration-200 hover:text-[var(--primary)] hover:ring-[var(--primary)]',
               'active:scale-95 sm:grid cursor-pointer',
               side === 'left' ? 'left-3' : 'right-3',
             ].join(' ')}

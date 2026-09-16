@@ -5,7 +5,8 @@ import { categories } from '@/data/categories'
 import { CartButton } from '@/components/cart/CartButton'
 import { CategoryImage } from '@/components/ui/Media'
 import { BRAND_LOGO_ATTR } from '@/lib/brand'
-import { TricolourRule, IndiaFlagGlyph } from '@/components/ui/TricolourRibbon'
+import { TricolourRule } from '@/components/ui/TricolourRibbon'
+import { FestiveGlyph } from '@/components/ui/FestiveGlyph'
 import {
   SearchIcon,
   UserIcon,
@@ -27,7 +28,7 @@ function CategoryMegaPanel() {
         'translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0',
       ].join(' ')}
     >
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_20px_48px_rgba(90,50,25,0.18)]">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_20px_48px_var(--shadow)] backdrop-blur-2xl">
         <ul className="grid grid-cols-3 gap-2">
           {categories.map((category) => (
             <li key={category.id}>
@@ -72,7 +73,7 @@ export function SiteHeader({ theme }: { theme: Theme }) {
   return (
     <>
       <div
-        className="w-full"
+        className="w-full backdrop-blur-xl"
         style={{
           background: 'linear-gradient(90deg, var(--announcement-from), var(--announcement-to))',
           color: 'var(--announcement-ink)',
@@ -80,7 +81,7 @@ export function SiteHeader({ theme }: { theme: Theme }) {
       >
         <p className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-2 text-center text-[13px] font-semibold">
           <span>{text.split('!')[0]}!</span>
-          <IndiaFlagGlyph className="h-[15px] w-[21px] shrink-0 rounded-[2px]" />
+          <FestiveGlyph themeId={theme.id} className="h-[15px] w-[21px] shrink-0 rounded-[2px]" />
           <span>{text.split('!').slice(1).join('!').trim()}</span>
           <span aria-hidden="true" className="opacity-40">|</span>
           <span className="font-extrabold tracking-wide">Use Code: {code}</span>
@@ -89,7 +90,7 @@ export function SiteHeader({ theme }: { theme: Theme }) {
 
       {/* No overflow-hidden here: the mega panel has to escape the header box. */}
       <header
-        className="sticky top-0 z-40 shadow-[0_4px_18px_rgba(90,50,25,0.08)]"
+        className="sticky top-0 z-40 shadow-[0_4px_18px_rgba(90,50,25,0.08)] backdrop-blur-xl"
         style={{ background: 'var(--header-bg)', color: 'var(--header-ink)' }}
       >
         {/* Three-column grid from md up: the side columns are equal fractions, so

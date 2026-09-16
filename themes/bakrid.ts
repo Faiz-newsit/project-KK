@@ -37,6 +37,10 @@ export const bakrid: Theme = {
     promoInk: '#FFFFFF',
     ring: 'rgba(15, 81, 50, 0.35)',
     shadow: 'rgba(22, 38, 29, 0.10)',
+    glass: 'rgba(255, 255, 255, 0.68)',
+    glassRing: 'rgba(255, 255, 255, 0.70)',
+    scriptInk: '#16261D',
+    scriptHalo: 'rgba(255, 253, 246, 0.85)',
   },
 
   content: {
