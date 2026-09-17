@@ -69,6 +69,14 @@ export interface ThemeContent {
     script: string
     /** Full-bleed background artwork. Without it the hero falls back to a gradient. */
     art?: string
+    /**
+     * Set when `art` is a finished banner with the title, subtitle, chips and
+     * script already printed into it. The hero then renders the artwork alone
+     * and overlays only the two CTAs, with the copy above restated for screen
+     * readers; without it the copy is typeset in HTML over the artwork's open
+     * side, which would double the text on a banner that already carries it.
+     */
+    artHasCopy?: boolean
   }
   promo: {
     eyebrow: string

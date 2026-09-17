@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'motion/react'
 import { SplashRibbons } from './SplashRibbons'
 import { MidnightSky } from './MidnightSky'
+import { Crackers } from './Crackers'
 import { BRAND_LOGO_ATTR } from '@/lib/brand'
 import type { Theme, ThemeId } from '@/themes/types'
 
@@ -142,7 +143,13 @@ export function SplashScreen({
           transition={{ duration: 0.3, ease: EASE_OUT }}
         >
           {backdrop === 'midnight-sky' ? (
-            <MidnightSky className="absolute inset-0" />
+            <>
+              <MidnightSky className="absolute inset-0" />
+              {/* Crackers belong to the splash, not to MidnightSky -- that same
+                  sky is painted behind the whole page, where fireworks would
+                  never stop going off behind the content. */}
+              <Crackers className="absolute inset-0" />
+            </>
           ) : (
             <SplashRibbons themeId={themeId} reduce={reduce} />
           )}

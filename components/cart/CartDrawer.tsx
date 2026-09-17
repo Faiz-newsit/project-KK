@@ -220,6 +220,7 @@ export function CartDrawer() {
                   <Button
                     className="w-full"
                     size="lg"
+                    variant="arrow"
                     onClick={startCheckout}
                     disabled={lines.length === 0}
                   >

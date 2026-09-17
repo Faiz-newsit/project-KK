@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-type Variant = 'primary' | 'outline' | 'accent' | 'elegant'
+type Variant = 'primary' | 'outline' | 'accent' | 'elegant' | 'arrow'
 type Size = 'sm' | 'md' | 'lg'
 
 const sizes: Record<Size, string> = {
@@ -19,6 +19,18 @@ const variants: Record<Variant, string> = {
   /* Quiet dark pill for the offer CTA standing beside Shop Now. Everything it
      needs is in `.btn-elegant`, where the hover sheen's pseudo-element lives. */
   elegant: 'btn-elegant',
+  /* Outlined pill that fills from the centre on hover while the arrow hands off
+     left to right. Structure is rendered below; styling is in `.btn-arrow`. */
+  arrow: 'btn-arrow',
+}
+
+/** The arrow the `arrow` variant hands across itself. Decorative either way. */
+function ArrowGlyph({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
+      <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+    </svg>
+  )
 }
 
 export function Button({
@@ -52,7 +64,19 @@ export function Button({
         className,
       ].join(' ')}
     >
-      {children}
+      {/* The arrow variant needs the label wrapped and two arrows plus the
+          filling circle as siblings, so it supplies its own structure rather
+          than asking every call site to repeat it. */}
+      {variant === 'arrow' ? (
+        <>
+          <ArrowGlyph className="btn-arrow__arr-2" />
+          <span className="btn-arrow__text">{children}</span>
+          <span className="btn-arrow__circle" aria-hidden="true" />
+          <ArrowGlyph className="btn-arrow__arr-1" />
+        </>
+      ) : (
+        children
+      )}
     </button>
   )
 }

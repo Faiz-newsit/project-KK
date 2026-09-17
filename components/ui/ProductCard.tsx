@@ -5,7 +5,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { discountPercent, type Product } from '@/data/products'
 import { useCart } from '@/components/cart/CartProvider'
 import { ProductImage } from './Media'
-import { ChevronDown, CheckIcon, PlusIcon } from './Icons'
+import { CheckIcon, PlusIcon } from './Icons'
+import { Select } from './Select'
 import { WishlistButton } from './WishlistButton'
 
 /** How long the tick stays up before the button offers itself again. */
@@ -32,9 +33,12 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     timer.current = window.setTimeout(() => setAdded(false), CONFIRM_MS)
   }
 
+  /* The card deliberately does not clip: the weight dropdown opens past its
+     edge, and overflow-hidden here would cut the panel off. The image below
+     clips itself, so the rounded top corners still hold. */
   return (
     <article
-      className="rise group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_var(--shadow)]"
+      className="rise group flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--surface)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_var(--shadow)]"
       style={{ animationDelay: index * 60 + 'ms' }}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--surface-alt)]">
@@ -57,20 +61,14 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           <p className="mt-1 text-xs text-[var(--ink-muted)]">{product.detail}</p>
         </div>
 
-        <div className="relative mt-auto w-fit">
-          <select
+        <div className="mt-auto w-fit">
+          <Select
+            size="sm"
             value={weightLabel}
-            onChange={(e) => setWeightLabel(e.target.value)}
-            aria-label={'Weight for ' + product.name}
-            className="appearance-none rounded-lg border border-[var(--border)] bg-[var(--bg-alt)] py-1.5 pl-3 pr-8 text-xs font-medium text-[var(--ink)] transition-colors hover:border-[var(--primary)] cursor-pointer"
-          >
-            {product.weights.map((w) => (
-              <option key={w.label} value={w.label}>
-                {w.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--ink-muted)]" />
+            onChange={setWeightLabel}
+            label={'Weight for ' + product.name}
+            options={product.weights.map((w) => ({ value: w.label, label: w.label }))}
+          />
         </div>
 
         <div className="flex items-center justify-between gap-3">

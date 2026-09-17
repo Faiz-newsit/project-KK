@@ -235,6 +235,315 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------------------
+ * Crackers: aerial shells rising and bursting over the Diwali splash.
+ *
+ * A single expanding ring of dots reads as a ring of dots, not a firework, so
+ * each burst is built from four layers firing on one shared --delay:
+ *
+ *   ::before         the shell -- a streak that rises and snuffs out
+ *   ::after          the detonation flash, a white-hot core gone in 0.1s
+ *   .cracker__rays   radiating spark streaks: a repeating conic gradient
+ *                    masked to an annulus, so it reads as trails thrown
+ *                    outward rather than as a disc or a pinwheel
+ *   .cracker__spark  the spark heads -- sixteen dots at jittered radii and
+ *                    three sizes, so the perimeter is never a clean circle
+ *
+ * The heads also drift downward as they expand, because sparks fall, and they
+ * flicker on a fast steps() brightness cycle. That flicker is what sells them
+ * as burning rather than merely fading.
+ *
+ * All CSS: no images, no canvas, no JS. Positioning is left to the caller.
+ * --------------------------------------------------------------------------- */
+.crackers {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.crackers .cracker {
+  position: absolute;
+  height: 0;
+  width: 0;
+}
+
+.crackers .cracker > i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  opacity: 0;
+}
+
+/* The rising shell. Snuffs out at 19%, just as the flash takes over. */
+.crackers .cracker::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: -1px;
+  height: 40px;
+  width: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(to top, transparent, var(--spark));
+  opacity: 0;
+  animation: cracker-rise var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+/* Detonation flash: brief, hot and near-white, so the burst has an instant. */
+.crackers .cracker::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: -13px 0 0 -13px;
+  height: 26px;
+  width: 26px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fff 0%, var(--spark) 45%, transparent 70%);
+  opacity: 0;
+  transform: scale(0);
+  animation: cracker-flash var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+/* Spark streaks. Thirty thin conic wedges, with the radial mask keeping only
+   an annulus of them, so they read as trails flung out from a centre. */
+.crackers .cracker__rays {
+  margin: -60px 0 0 -60px;
+  height: 120px;
+  width: 120px;
+  border-radius: 9999px;
+  background: repeating-conic-gradient(
+    from 0deg,
+    var(--spark) 0deg 1.4deg,
+    transparent 1.4deg 12deg
+  );
+  -webkit-mask-image: radial-gradient(closest-side, transparent 10%, #000 38%, transparent 76%);
+  mask-image: radial-gradient(closest-side, transparent 10%, #000 38%, transparent 76%);
+  transform: scale(0.08);
+  animation: cracker-rays var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
+}
+
+/* Spark heads. Sixteen dots at radii jittered 49-65px, with spreads of
+   -0.5/0/+0.5 off a 2px base, so no two sit at the same distance or size. */
+.crackers .cracker__spark {
+  margin: -1.5px 0 0 -1.5px;
+  height: 3px;
+  width: 3px;
+  border-radius: 9999px;
+  box-shadow:
+    64px 0 0 0 var(--spark),
+    51px 21px 0 -0.5px var(--spark),
+    48px 48px 0 0 var(--spark),
+    22px 53px 0 0.5px var(--spark),
+    0 62px 0 0 var(--spark),
+    -21px 50px 0 -0.5px var(--spark),
+    -47px 47px 0 0 var(--spark),
+    -54px 22px 0 0.5px var(--spark),
+    -63px 0 0 0 var(--spark),
+    -52px -21px 0 -0.5px var(--spark),
+    -49px -49px 0 0 var(--spark),
+    -20px -49px 0 0.5px var(--spark),
+    0 -65px 0 0 var(--spark),
+    22px -53px 0 -0.5px var(--spark),
+    47px -47px 0 0 var(--spark),
+    50px -21px 0 0.5px var(--spark);
+  transform: scale(0.06);
+  /* Two animations on disjoint properties: the burst owns transform and
+     opacity, the glint owns filter, so neither overwrites the other. */
+  animation:
+    cracker-spark var(--dur) ease-out infinite,
+    cracker-glint 0.16s steps(2, end) infinite;
+  animation-delay: var(--delay), var(--delay);
+}
+
+/* Each shell bursts at 20% of its own duration, so --delay is set to
+   (wanted burst time - 0.2 * --dur). The splash lives 1.75s: shells 5 and 10
+   are already dissipating as it opens, then nine more land across the hold at
+   roughly 0.25s, 0.45s, 0.60s, 0.70s, 0.85s, 1.00s, 1.20s and 1.45s, so the
+   sky is never empty. Durations are all different, so the loops drift apart
+   instead of falling into step.
+
+   --scale multiplies the 60px ring, so these run roughly 90-156px across.
+   Sized to fill the sky behind the logo rather than sit distant in it. */
+.cracker--1 {
+  left: 14%;
+  top: 24%;
+  --spark: var(--gold);
+  --dur: 2.4s;
+  --delay: -0.23s;
+  --scale: 1.05;
+}
+.cracker--2 {
+  left: 78%;
+  top: 18%;
+  --spark: var(--accent);
+  --dur: 2.8s;
+  --delay: -0.11s;
+  --scale: 1.18;
+}
+.cracker--3 {
+  left: 30%;
+  top: 64%;
+  --spark: #ff5fa2;
+  --dur: 2.2s;
+  --delay: 0.26s;
+  --scale: 0.91;
+}
+.cracker--4 {
+  left: 68%;
+  top: 70%;
+  --spark: var(--gold);
+  --dur: 3s;
+  --delay: 0.4s;
+  --scale: 1.3;
+}
+.cracker--5 {
+  left: 50%;
+  top: 10%;
+  --spark: #ffd98a;
+  --dur: 2.6s;
+  --delay: -0.82s;
+  --scale: 0.79;
+}
+.cracker--6 {
+  left: 8%;
+  top: 52%;
+  --spark: var(--accent);
+  --dur: 2.5s;
+  --delay: 0.1s;
+  --scale: 0.95;
+}
+.cracker--7 {
+  left: 90%;
+  top: 46%;
+  --spark: #ff5fa2;
+  --dur: 2.9s;
+  --delay: 0.27s;
+  --scale: 0.85;
+}
+.cracker--8 {
+  left: 22%;
+  top: 84%;
+  --spark: #ffd98a;
+  --dur: 2.3s;
+  --delay: 0.74s;
+  --scale: 1;
+}
+.cracker--9 {
+  left: 82%;
+  top: 82%;
+  --spark: var(--gold);
+  --dur: 2.7s;
+  --delay: 0.91s;
+  --scale: 0.75;
+}
+.cracker--10 {
+  left: 42%;
+  top: 30%;
+  --spark: var(--accent);
+  --dur: 3.1s;
+  --delay: -0.77s;
+  --scale: 0.87;
+}
+
+@keyframes cracker-rise {
+  0% {
+    transform: translateY(90px) scaleY(0.4);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  17% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.9;
+  }
+  19%,
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* Hot core. Up and out inside a tenth of a second -- any slower and it reads
+   as a glowing ball rather than a detonation. */
+@keyframes cracker-flash {
+  0%,
+  19% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  21% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  26%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Streaks lead the heads outward and burn out first, which is what leaves the
+   heads looking thrown. The slight rotation stops the wedges reading as a
+   static starburst. */
+@keyframes cracker-rays {
+  0%,
+  20% {
+    transform: scale(0.08) rotate(0deg);
+    opacity: 0;
+  }
+  24% {
+    opacity: 0.9;
+  }
+  48%,
+  100% {
+    transform: scale(var(--scale)) rotate(9deg);
+    opacity: 0;
+  }
+}
+
+/* Heads outlive the streaks and drift down as they go: sparks fall. */
+@keyframes cracker-spark {
+  0%,
+  20% {
+    transform: translateY(0) scale(0.06);
+    opacity: 0;
+  }
+  26% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.85;
+  }
+  72%,
+  100% {
+    transform: translateY(16px) scale(var(--scale));
+    opacity: 0;
+  }
+}
+
+/* The crackle. A fast two-step brightness flicker on filter alone, so the
+   burst animation keeps ownership of transform and opacity. */
+@keyframes cracker-glint {
+  0% {
+    filter: drop-shadow(0 0 6px var(--spark)) brightness(1);
+  }
+  100% {
+    filter: drop-shadow(0 0 6px var(--spark)) brightness(1.75);
+  }
+}
+
+/* Quiet festival: no shells, no reports. Matches how the meteors bow out. */
+@media (prefers-reduced-motion: reduce) {
+  .crackers {
+    display: none;
+  }
+}
+
 /* Hanging lamps breathe rather than blink; each carries its own delay. */
 .lamp {
   animation: lamp-breathe 2.8s ease-in-out infinite;
@@ -311,5 +620,353 @@ body {
   .btn-elegant,
   .btn-elegant::after {
     transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Footer social links: a layered ring that fans out on hover, with a profile
+ * card rising above it.
+ *
+ * Every network shares these rules; only --brand changes, set per item on the
+ * element, so no colour is hard-coded here and a fifth network needs no CSS.
+ *
+ * Sized at 46px rather than the 55px this effect is usually drawn at: four of
+ * them sit in a footer column that drops to two-up on small screens, and at
+ * 55px the fanned layers of neighbouring icons overlap.
+ *
+ * The card is positioned off `bottom: 100%` and animated on transform, instead
+ * of transitioning `top` to a fixed negative offset -- it then sits correctly
+ * whatever height its text runs to, and animates on the compositor.
+ * --------------------------------------------------------------------------- */
+.social {
+  position: relative;
+}
+
+.social__link {
+  position: relative;
+  display: block;
+  height: 46px;
+  width: 46px;
+  color: var(--brand);
+  text-decoration: none;
+}
+
+/* --- the profile card ---------------------------------------------------- */
+.social__card {
+  position: absolute;
+  bottom: calc(100% + 16px);
+  left: 50%;
+  z-index: 2;
+  padding: 10px;
+  border-radius: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow:
+    inset 5px 5px 5px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.3),
+    -5px -5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Keyboard users get the card too, not just pointer users. */
+.social:hover .social__card,
+.social:focus-within .social__card {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.social__profile {
+  display: block;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 10px 15px;
+  background: var(--brand);
+  white-space: nowrap;
+}
+
+.social__user {
+  display: flex;
+  gap: 10px;
+}
+
+.social__avatar {
+  display: flex;
+  height: 44px;
+  width: 44px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.social__details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.social__name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.social__handle {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.social__blurb {
+  display: block;
+  padding-top: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+/* --- the layered ring ---------------------------------------------------- */
+.social__layer {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--brand);
+  border-radius: 50%;
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--brand) 55%, transparent),
+    0 0 20px color-mix(in srgb, var(--brand) 35%, transparent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.social:hover .social__layer,
+.social:focus-within .social__layer {
+  transform: rotate(-35deg) skew(20deg);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--brand) 85%, transparent),
+    0 0 36px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+
+.social__layer > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border: 1px solid var(--brand);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.social:hover .social__layer > span,
+.social:focus-within .social__layer > span {
+  box-shadow: -1px 1px 3px var(--brand);
+}
+
+/* Offsets are the classic 5/10/15/20 scaled to the 46px ring. */
+.social:hover .social__layer > span:nth-child(1),
+.social:focus-within .social__layer > span:nth-child(1) {
+  opacity: 0.2;
+}
+.social:hover .social__layer > span:nth-child(2),
+.social:focus-within .social__layer > span:nth-child(2) {
+  opacity: 0.4;
+  transform: translate(4px, -4px);
+}
+.social:hover .social__layer > span:nth-child(3),
+.social:focus-within .social__layer > span:nth-child(3) {
+  opacity: 0.6;
+  transform: translate(8px, -8px);
+}
+.social:hover .social__layer > span:nth-child(4),
+.social:focus-within .social__layer > span:nth-child(4) {
+  opacity: 0.8;
+  transform: translate(12px, -12px);
+}
+.social:hover .social__layer > span:nth-child(5),
+.social:focus-within .social__layer > span:nth-child(5) {
+  opacity: 1;
+  transform: translate(16px, -16px);
+}
+
+/* The mark rides the outermost disc, so the icon leads the fan. */
+.social__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(
+    45deg,
+    var(--brand) 0%,
+    color-mix(in srgb, var(--brand) 62%, #000) 25%,
+    var(--brand) 50%,
+    color-mix(in srgb, var(--brand) 62%, #000) 75%,
+    var(--brand) 100%
+  );
+}
+
+/* --- the label ----------------------------------------------------------- */
+.social__label {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: bottom 0.3s ease, opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.social:hover .social__label,
+.social:focus-within .social__label {
+  bottom: -26px;
+  opacity: 1;
+}
+
+/* Still footer: the card and label still appear, they just do not travel. */
+@media (prefers-reduced-motion: reduce) {
+  .social__card,
+  .social__layer,
+  .social__layer > span,
+  .social__label {
+    transition: none;
+  }
+  .social:hover .social__layer,
+  .social:focus-within .social__layer {
+    transform: none;
+  }
+  .social:hover .social__layer > span,
+  .social:focus-within .social__layer > span {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Arrow button: an outlined pill that fills from the centre on hover while the
+ * arrow hands itself across, left to right, and the radius softens to a rect.
+ *
+ * Colours are theme tokens, not literals, so the same button reads gold on
+ * Diwali and red on Independence Day.
+ *
+ * Two departures from the effect as it is usually written:
+ *
+ *   - the circle is sized in % with aspect-ratio rather than a fixed 220px,
+ *     because both call sites are full-width and a fixed circle leaves the
+ *     corners unfilled on anything wider than itself;
+ *   - every hover rule is guarded with :not(:disabled). Checkout is disabled on
+ *     an empty cart, and :hover still fires on a disabled button, so without
+ *     the guard a dead control would animate under the pointer.
+ *
+ * Like .btn-elegant, these rules are unlayered and so win over Tailwind's
+ * layered utilities -- which is what lets border-radius override rounded-full.
+ * --------------------------------------------------------------------------- */
+.btn-arrow {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 100px;
+  background-color: transparent;
+  color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
+  transition:
+    box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow svg {
+  position: absolute;
+  width: 22px;
+  fill: var(--primary);
+  z-index: 9;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow__arr-1 {
+  right: 16px;
+}
+
+.btn-arrow__arr-2 {
+  left: -25%;
+}
+
+/* Sits above the fill but below the arrows, which is why the label carries a
+   stacking context of its own. */
+.btn-arrow__text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow__circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--primary);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow:not(:disabled):hover {
+  border-radius: 12px;
+  color: var(--primary-ink);
+  box-shadow: 0 0 0 12px transparent;
+}
+
+.btn-arrow:not(:disabled):hover svg {
+  fill: var(--primary-ink);
+}
+
+.btn-arrow:not(:disabled):hover .btn-arrow__arr-1 {
+  right: -25%;
+}
+
+.btn-arrow:not(:disabled):hover .btn-arrow__arr-2 {
+  left: 16px;
+}
+
+.btn-arrow:not(:disabled):hover .btn-arrow__text {
+  transform: translateX(12px);
+}
+
+/* 130% of the button's own width, so the fill clears the corners at any size. */
+.btn-arrow:not(:disabled):hover .btn-arrow__circle {
+  width: 130%;
+  opacity: 1;
+}
+
+.btn-arrow:not(:disabled):active {
+  box-shadow: 0 0 0 4px var(--primary);
+}
+
+/* Still button: it still fills and still reads as pressed, nothing travels. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-arrow,
+  .btn-arrow svg,
+  .btn-arrow__text,
+  .btn-arrow__circle {
+    transition: none;
+  }
+  .btn-arrow__text {
+    transform: none;
+  }
+  .btn-arrow:not(:disabled):hover .btn-arrow__text {
+    transform: none;
   }
 }

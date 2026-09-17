@@ -61,7 +61,7 @@ export function FestiveHome({ theme }: { theme: Theme }) {
             <Footer theme={theme} />
             <ThemeSwitcher current={theme.id} />
             <CartDrawer />
-            <OrderSuccess themeId={theme.id} />
+            <OrderSuccess themeId={theme.id} backdrop={theme.backdrop} />
           </CheckoutProvider>
         </CartProvider>
       </div>

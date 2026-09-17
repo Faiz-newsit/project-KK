@@ -32,6 +32,11 @@ function TitleLine({ line }: { line: HeroTitleLine }) {
  * painted decoration. The artwork already carries the product, so no separate
  * product card is drawn on top of it.
  *
+ * A theme may instead supply a finished banner that already has the copy printed
+ * into it (`hero.artHasCopy`). That takes an earlier branch which draws the
+ * artwork and overlays only the CTAs, since typesetting the copy again would
+ * stack HTML text on top of the identical printed text.
+ *
  * Which decoration depends on what the panel sits on. Flat themes get the
  * brand ribbon sweeps; a theme running over the midnight sky gets a lamp
  * garland and two warm glows instead, because ribbons read as paint on a page
@@ -45,9 +50,85 @@ function TitleLine({ line }: { line: HeroTitleLine }) {
  * render under prefers-reduced-motion.
  */
 export function Hero({ theme }: { theme: Theme }) {
-  const { titleLines, subtitle, chips, ctaPrimary, ctaSecondary, script, art } = theme.content.hero
+  const { titleLines, subtitle, chips, ctaPrimary, ctaSecondary, script, art, artHasCopy } =
+    theme.content.hero
   const { code } = theme.content.announcement
   const offer = `${theme.content.promo.headline} on all fresh cuts`
+
+  const actions = (
+    <>
+      <ShopNowButton label={ctaPrimary} />
+      <Button variant="elegant" size="lg">
+        {ctaSecondary}
+      </Button>
+    </>
+  )
+
+  /* --- finished banner supplied: show it, overlay only the CTAs --- */
+  if (art && artHasCopy) {
+    return (
+      <section className="mx-auto max-w-[1320px] px-4 pt-4" aria-label="Festive offer">
+        <div className="overflow-hidden rounded-2xl bg-[var(--surface-alt)]">
+          {/* The title, subtitle and feature chips live inside the artwork, so
+              they are restated here for screen readers and search engines
+              rather than being lost as pixels. */}
+          <h1 className="sr-only">
+            {titleLines.map((line) => line.text).join(' ')} {subtitle}
+          </h1>
+          <p className="sr-only">
+            {chips.map((chip) => chip.label).join('. ')}. {script}.
+          </p>
+
+          {/* Height tracks the typeset hero's clamp so the two themes open at the
+              same scale, with a 200px floor instead of 380px: on a phone that
+              floor is exactly the artwork's own height at that width, so the
+              banner lands uncropped rather than being scaled up and cut in from
+              the sides, which would slice off the printed copy column.
+
+              Above phone width the crop is vertical only and object-position
+              30% holds the visible band at roughly 8%-80% of the source at every
+              size. The printed copy spans 24%-66%, so it stays whole throughout;
+              what the crop takes is lantern above and rangoli below. */}
+          <div className="relative h-[clamp(200px,38vw,520px)] w-full">
+            <Image
+              src={art}
+              alt=""
+              aria-hidden="true"
+              fill
+              priority
+              sizes="(max-width: 1360px) 100vw, 1320px"
+              className="object-cover object-[center_30%]"
+            />
+
+            {/* Positioning lives on this wrapper, never on the button itself:
+                ShopNowButton needs `relative` for its shine sweep, and Tailwind
+                emits `.relative` after `.absolute`, so a positioning class passed
+                into the button would silently lose the cascade.
+
+                Anchored to the bottom edge rather than a percentage, because the
+                gap below the printed chips is what matters and it holds as the
+                banner scales. Overlay only from xl up; below that the crop leaves
+                too little clear field under the chips, so the CTAs drop to their
+                own row.
+
+                Left edge at 20%: inset from the printed copy column, which starts
+                at 13.5%, so the CTAs sit under it without reading as a fourth
+                line of the same block, and still well clear of the platter. The
+                crop is vertical only, so a percentage of the panel is the same
+                percentage of the artwork at every width. */}
+            <span className="absolute bottom-8 left-[20%] hidden items-center gap-3 xl:flex">
+              {actions}
+            </span>
+          </div>
+
+          {/* Under xl the CTAs sit below the artwork, centred on the same axis. */}
+          <div className="flex flex-wrap items-center justify-center gap-3 px-4 py-4 xl:hidden">
+            {actions}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="mx-auto max-w-[1320px] px-4 pt-4" aria-label="Festive offer">
@@ -149,12 +230,7 @@ export function Hero({ theme }: { theme: Theme }) {
             </Reveal>
 
             <Reveal delay={0.24}>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <ShopNowButton label={ctaPrimary} />
-                <Button variant="elegant" size="lg">
-                  {ctaSecondary}
-                </Button>
-              </div>
+              <div className="mt-8 flex flex-wrap items-center gap-3">{actions}</div>
             </Reveal>
           </div>
         </div>

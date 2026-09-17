@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { Theme } from '@/themes/types'
 import { categories } from '@/data/categories'
 import { TricolourRule } from '@/components/ui/TricolourRibbon'
+import { SocialIcon, type Social } from './SocialIcon'
 import {
   FacebookLogo,
   InstagramLogo,
@@ -20,12 +21,38 @@ const quickLinks = [
   'Delivery Areas',
 ]
 
-/* Demo build: real handles go here when the accounts are confirmed. */
-const socials = [
-  { label: 'Facebook', Icon: FacebookLogo },
-  { label: 'Instagram', Icon: InstagramLogo },
-  { label: 'WhatsApp', Icon: WhatsappLogo },
-  { label: 'YouTube', Icon: YoutubeLogo },
+/* Demo build: real handles go here when the accounts are confirmed. Brand
+   colours stay literal rather than themed -- a social mark is recognised by its
+   own colour, so these do not follow the festival palette. */
+const socials: Social[] = [
+  {
+    label: 'Facebook',
+    Icon: FacebookLogo,
+    handle: '@thekarikadai',
+    blurb: 'Fresh halal cuts, Chennai',
+    brand: '#1877f2',
+  },
+  {
+    label: 'Instagram',
+    Icon: InstagramLogo,
+    handle: '@thekarikadai',
+    blurb: 'Today’s cuts, daily',
+    brand: '#e1306c',
+  },
+  {
+    label: 'WhatsApp',
+    Icon: WhatsappLogo,
+    handle: 'Order on chat',
+    blurb: 'Replies within the hour',
+    brand: '#25d366',
+  },
+  {
+    label: 'YouTube',
+    Icon: YoutubeLogo,
+    handle: '@thekarikadai',
+    blurb: 'Recipes and cuts explained',
+    brand: '#ff0000',
+  },
 ]
 
 function ColumnHeading({ children }: { children: React.ReactNode }) {
@@ -66,17 +93,13 @@ export function Footer({ theme }: { theme: Theme }) {
             Fresh halal meat, cut to order and delivered across Chennai. Never frozen.
           </p>
 
-          <ul className="mt-5 flex items-center gap-2">
-            {socials.map(({ label, Icon }) => (
-              <li key={label}>
-                <a
-                  href="#"
-                  aria-label={`Karikadai on ${label}`}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-[var(--surface)] text-[var(--ink-muted)] ring-1 ring-[var(--border)] transition-all duration-200 hover:-translate-y-0.5 hover:text-[var(--primary)] hover:ring-[var(--primary)]"
-                >
-                  <Icon size={19} weight="fill" />
-                </a>
-              </li>
+          {/* Wider gaps and a bottom margin than the row needs at rest: the
+              layers fan 16px out on hover and the label drops 26px below, and
+              both would otherwise run into the next icon and the column under
+              it. */}
+          <ul className="mt-5 mb-8 flex items-center gap-6">
+            {socials.map((social) => (
+              <SocialIcon key={social.label} {...social} />
             ))}
           </ul>
         </div>

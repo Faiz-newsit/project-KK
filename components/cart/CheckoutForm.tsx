@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { useCheckout } from './CheckoutProvider'
 import { DELIVERY_SLOTS, type CustomerDetails } from '@/lib/checkout/types'
 import { Button } from '@/components/ui/Button'
+import { Select } from '@/components/ui/Select'
 
 const FIELD_ORDER: (keyof CustomerDetails)[] = ['name', 'phone', 'address', 'slot']
 
@@ -115,22 +116,17 @@ export function CheckoutForm() {
           <label htmlFor="co-slot" className={labelClass}>
             Delivery slot
           </label>
-          <select
+          <Select
             id="co-slot"
             name="slot"
+            label="Delivery slot"
+            placeholder="Choose a slot"
             value={details.slot}
-            onChange={(e) => setField('slot', e.target.value)}
-            aria-invalid={errors.slot ? true : undefined}
-            aria-describedby={errors.slot ? 'co-slot-error' : undefined}
-            className={[controlClass, border('slot'), 'cursor-pointer'].join(' ')}
-          >
-            <option value="">Choose a slot</option>
-            {DELIVERY_SLOTS.map((slot) => (
-              <option key={slot} value={slot}>
-                {slot}
-              </option>
-            ))}
-          </select>
+            onChange={(slot) => setField('slot', slot)}
+            invalid={Boolean(errors.slot)}
+            describedBy={errors.slot ? 'co-slot-error' : undefined}
+            options={DELIVERY_SLOTS.map((slot) => ({ value: slot, label: slot }))}
+          />
           {errors.slot && (
             <p id="co-slot-error" className="mt-1 text-xs text-[var(--primary)]">
               {errors.slot}
@@ -140,7 +136,7 @@ export function CheckoutForm() {
       </div>
 
       <div className="mt-6 flex flex-col gap-2">
-        <Button type="submit" size="lg" className="w-full">
+        <Button type="submit" size="lg" variant="arrow" className="w-full">
           Place order
         </Button>
         <button

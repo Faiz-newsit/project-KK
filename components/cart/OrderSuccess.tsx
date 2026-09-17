@@ -5,18 +5,30 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCheckout } from './CheckoutProvider'
 import { AnimatedTick } from '@/components/ui/AnimatedTick'
 import { SplashRibbons } from '@/components/ui/SplashRibbons'
+import { MidnightSky } from '@/components/ui/MidnightSky'
+import { Crackers } from '@/components/ui/Crackers'
 import { Button } from '@/components/ui/Button'
 import { formatRupees } from '@/lib/format'
 import { products } from '@/data/products'
-import type { ThemeId } from '@/themes/types'
+import type { Theme, ThemeId } from '@/themes/types'
 
 /**
  * Full-screen order confirmation.
  *
- * Reuses the splash screen's ribbons and themed backdrop on purpose, so
- * placing an order reads as the same brand moment that opened the page.
+ * Reuses the splash screen's decoration on purpose, so placing an order reads
+ * as the same brand moment that opened the page -- which means it takes the
+ * same branch the splash does: a theme with an animated backdrop gets that sky
+ * and its crackers, everything else gets the brand ribbons. Sending Diwali the
+ * ribbons here would put a tricolour sweep over a festival that has nothing to
+ * do with one.
  */
-export function OrderSuccess({ themeId }: { themeId: ThemeId }) {
+export function OrderSuccess({
+  themeId,
+  backdrop,
+}: {
+  themeId: ThemeId
+  backdrop?: Theme['backdrop']
+}) {
   const { phase, order, finish } = useCheckout()
   const panel = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
@@ -56,7 +68,14 @@ export function OrderSuccess({ themeId }: { themeId: ThemeId }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <SplashRibbons themeId={themeId} reduce={reduce} />
+          {backdrop === 'midnight-sky' ? (
+            <>
+              <MidnightSky className="absolute inset-0" />
+              <Crackers className="absolute inset-0" />
+            </>
+          ) : (
+            <SplashRibbons themeId={themeId} reduce={reduce} />
+          )}
 
           <div className="relative mx-auto flex min-h-dvh max-w-[520px] flex-col items-center justify-center px-5 py-12 text-center">
             <AnimatedTick />
@@ -118,7 +137,7 @@ export function OrderSuccess({ themeId }: { themeId: ThemeId }) {
                 </div>
               </dl>
 
-              <Button className="mt-6 w-full" size="lg" onClick={finish}>
+              <Button className="mt-6 w-full" size="lg" variant="arrow" onClick={finish}>
                 Continue shopping
               </Button>
             </motion.div>

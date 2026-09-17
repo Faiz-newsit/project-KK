@@ -6,8 +6,9 @@ import type { Theme } from './types'
  * header, the cards and the footer instead of being boxed out by them. The one
  * opaque value is `bg`, which is the night the sky itself is painted on.
  *
- * No artwork is referenced. Every section falls back to its typeset layout, so
- * the page is complete before any Diwali photography exists.
+ * The hero and promo banner are supplied artwork with their copy already printed
+ * into them, so both sections render the image and overlay only their CTAs. The
+ * remaining sections still fall back to their typeset layouts.
  */
 export const diwali: Theme = {
   id: 'diwali',
@@ -76,6 +77,8 @@ export const diwali: Theme = {
       ctaPrimary: 'Shop Now',
       ctaSecondary: 'Diwali Offers',
       script: 'Good Food, Brighter Celebrations',
+      art: '/festive/hero-diwali.png',
+      artHasCopy: true,
     },
     promo: {
       eyebrow: 'Diwali Feast Special',
@@ -83,6 +86,7 @@ export const diwali: Theme = {
       sub: 'On premium cuts',
       cta: 'Shop Now',
       script: 'Good Food Brings People Together',
+      image: '/festive/promo-diwali.png',
     },
     favourites: {
       title: 'All Time Favourites',
